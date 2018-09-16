@@ -9,5 +9,5 @@ public class JerseyConfig extends ResourceConfig {
   public JerseyConfig() {
     register(UserResource.class);
   }
-
+ 
 }

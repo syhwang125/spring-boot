@@ -83,7 +83,7 @@ public class UserResource {
 		}
 		return Response.status(404).build();
 	}
-
+ 
 	static {
 		User user1 = new User();
 		user1.setId(1);
