@@ -1,27 +1,61 @@
 package com.my.springboot;
 
-public class User {
-	  public String getName() {
-		return name;
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement(name = "user")
+public class User implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	@XmlAttribute(name = "id")
+	private int id;
+	
+	@XmlAttribute(name = "url")
+	private String url;
+	
+	@XmlElement(name = "firstName")
+	private String firstName;
+	
+	@XmlElement(name = "lastName")
+	private String lastName;
+	
+	public int getId() {
+		return id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public int getAge() {
-		return age;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	private String name;
-	  private int age;
-	 
-	  public User(String name, int age) {
-	    this.name = name;
-	    this.age = age;
-	  }
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
 }

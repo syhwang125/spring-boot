@@ -1,28 +1,24 @@
 package com.my.springboot;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 
 /**
- * Hello world!
- *  http://localhost:8080/hello          (404 error)
- *  http://localhost:8080/v1/users/2     (success)
- *  http://localhost:8080/v1/1   ??      (404 error)
+ *  http://localhost:8080/users/1          
+ *  http://localhost:8080/users     (success)
+ *  http://localhost:8080/users/3   ??      (404 error)
  */
 @SpringBootApplication
-@RestController
-public class SpringBootJerseyApp 
+public class SpringBootJerseyApp extends SpringBootServletInitializer
 {
-	@RequestMapping("/hello")
-    String hello() {
-        return "Hello World!!!";
-    }
 	
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
-        SpringApplication.run(SpringBootJerseyApp.class, args);
+//      SpringApplication.run(SpringBootJerseyApp.class, args);
+        new SpringBootJerseyApp().configure(new SpringApplicationBuilder(SpringBootJerseyApp.class)).run(args);
     }
 }
