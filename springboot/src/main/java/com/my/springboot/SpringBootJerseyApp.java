@@ -17,6 +17,7 @@ public class SpringBootJerseyApp extends SpringBootServletInitializer
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
+        System.out.println("######################");
 //      SpringApplication.run(SpringBootJerseyApp.class, args);
         new SpringBootJerseyApp().configure(new SpringApplicationBuilder(SpringBootJerseyApp.class)).run(args);
     }
