@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	$(function() {
+		console.log("ready");
+		
+		$.ajax({
+			url : "http://localhost:8080/bs",
+			success: function (result) {
+				console.log(result);
+			}, 
+			error: function(e) {
+				console.log(e);
+			}
+		});
+	});
+	
+</script>
+</head>
+<body>
+<h1>
+Client Application 
+</h1>
+</body>
+</html>
