@@ -1,0 +1,167 @@
+MES3.0 Boot Camp 교육 ('19.5.27 ~ 5.31) 
+
+1일차 : java 8
+2일차 : spring core - DI, MVC
+3일차 : spring cloud 
+4일차 : spring boot 
+5일차 : project 
+
+1~2일차 : 넥스트리 권기진 강사 
+3~5일차 : ICT 이세희 
+
+< 3일차 교육 내용 >   Spring Cloud 
+1. Spring Cloud 란
+   마이크로서비스 아키텍처 구축을 위한 spring boot기반의 라이브러리
+   spring cloud 는 여러개의 서브프로젝트가 있고 cloud-native application 개발을 위한 솔루션 제공 
+   API Gateway, Service Registry, Message Brokers, Config Server 
+
+   ㅇ 마이크로서비스 단점해결을 위한 스프링클라우드 기술들 
+   서비스디스커버리 : Eureka 
+   클라이언트-사이드 로드밸런싱 : Hystrix/Ribbon 
+   서비스응답없을때 결함허용 : Circuit-Breaker
+   서비스보안 : OAuth2
+   서비스간 커뮤니케이션 Http/메시징 : Feign/Spring Cloud Stream 
+   ACID(원자성, 일관성, 고립성, 지속성)는 데이터베이스 트랜잭션 보장 CQRS : Conductor/Camel ...
+   
+   
+2. Config 서버 
+   분산되어 있는 여러서비스의 설정을 관리하는 서버 
+   
+3. Eureka 서버 / Service Discovery 
+   분산되어 있는 여러 서비스의 인스턴스를 관리  
+   마이크로서비스의 이름과 인스턴스 위치를 관리 
+   @EnableDiscoveryClient 설정 
+   
+4. API Gateway - Zuul , Callgate 
+   서비스간의 호출에 대한 위치 투명성 제공 
+   Eureka 서버의 클라이언트로 등록되어 있음
+   Eureka 정보를 통해 해당 서비스로 라우팅해 줌 
+   마이크로서비스는 API Gateway 주소만 알면 됨 
+   @EnableDiscoveryClient 설정 
+
+5. netflix oss 설치 및 프로젝트 실습 
+   1) config              8888   - 제일먼저 띄어져야 함. bootstrap.yml 
+   2) bureau   (eureka)   8761
+   3) callgate            8080   -> 포트 충돌로 인해 8083으로 변경 
+
+   http://localhost:8083/actuator/routes
+   
+   http://localhost:8761/
+   http://localhost:8761/actuator 
+   http://localhost:8888/bureau/default 
+   
+   src/main/resources/ 밑에 
+   bootstrap.yml 서비스가 켜지기 전에 읽어가는 정보 
+   application.yml 서비스가 켜지면서 읽어가는 정보 (db, kafka 등 설정정보) 
+   
+6. File > New > spring starter project 
+   config client, eureka discovery, web 선택 후 Item 프로젝트 생성 
+   bootstrap.yml 파일에 config 와 eureka url 정보 등록
+   
+   config 서버에 item.yml 파일 추가 (server port 정보 저장) 
+   
+ ★  config server에 대한 정보는 반드시 bootstrap.yml 파일에 포함되어야 하며
+   eureka 등 기타 정보는 application.yml 에 저장하면 된다. 
+
+7. Spring Boot 
+   단독 실행가능한 스프링기반 애플리케이션 제작 가능 
+   
+   Restful API 
+   - Resource 
+   - POST (create)
+   - GET (read)
+   - PUT (update) 
+   - DELETE (delete)
+   
+   Feign Client : Rest기반 서비스 호출 추상화
+     backend app간 i/f 는 feign client 를 통해서 함
+	 
+ 	config 서버 > resources > callgate.yml >   prefix: /api 정보가 있음
+	http://localhost:8083/api/item/posco    (callgate 서버를 경유) 
+	http://localhost:8083/posco 
+	
+item, user 프로젝트 생성 
+config-repo 에 item 폴더 application.yml 저장 
+bootstrap.xml 에 config, eureka 정보 입력 
+user 프로젝트에서 feignClient I/F 생성 
+
+item 프로젝트 Application 에서  
+@EnableFeignClients(basePackages="com.posco.mes3.user")추가 
+	@Autowired
+	private UserClient userClient;
+
+8. hexagonal (6각형) 아키텍처 
+   헥사고날 아키텍처의 핵심은 Business Logic 이고 inbound/outbound 로 존재 
+   
+  핵심프로젝트 *-domain프로젝트는 기술 중립적 POJO 로 구현
+  *-service, *-store-jpa 프로젝트는 spring f/w에서 실행되는 기술 종속적 
+  
+9. MES3.0 Microservice 작업 순서 
+   domain -> service -> store -> client project 순으로 작업   
+   
+< 4일차 교육 내용 >   Spring Boot 실습 
+1) cart-domain 에서  
+   /entity/Cart, CartItem class 
+   /logic/CartLogic class
+   /spec/CartServer Interface
+   /store/CartStore Interface
+   
+2) Cart-service 에서
+   CartService pom.xml 에 CartDomain dependency 추가
+   /rest/CartResource 라는 이름으로 RestController 작성
+   /logic/CartSpringLogic extends CartLogic 으로 @Service 작성 
+   
+3) Cart-Store 에서
+   /CartJpaStore implements CartStore class  
+   /jpo/CartJpo class           // table, column 등 DB객체 정의
+   /repository/CartRepository extends JpaRepository<CartJpo, String>  interface 정의
+   
+
+4) cart-domain 에서 
+   /lifecycle/serviceLifecycle interface 추가 
+   /lifecycle/storeLifecycle    interface 추가
+
+5) cart-service 에서 
+   /lifecycle/serviceLifecycler implements ServiceLifecycle 클래스 requestCartService() 메소드 추가 
+
+6) cart-store 에서 
+	/lifecylce/StoreLifeCycler implements StoreLifecycle 클래스 requestCartStore() 메소드 추가
+
+7) cart-domain 에서 	cartLogic 
+	public CartLogic(StoreLifecycle storeLifecycle) {
+		this.cartStore = storeLifecycle.requestCartStore();
+	}
+	
+8) cart-service 에서 cartResource  
+	public CartResource(ServiceLifecycle serviceLifecycle) {
+		this.cartService =
+				serviceLifecycle.requestCartService();
+	}
+   
+8) cart-service 에서 cartSpringLogic    
+   public CartSpringLogic(StoreLifecycle storeLifecycle){}
+
+10) cart-boot  (pom.xml 에 cart-service , cart-domain 의존관계 추가)
+    cartApp bootapplication 클래스 
+	application.yml 
+   
+insomnia 에서 
+localhost:53264/regist/test
+	{
+	"Id":"abc",
+	"price":1000,
+	"quantity":5
+	}
+	
+localhost:53264/test   (findbyid) 
+
+
+   
+#########################################################################################
+cd existing_folder
+git init
+git remote add origin https://gitlab.com/bootcamp17-pd258077/day04-pd258077.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+##########################################################################################   
