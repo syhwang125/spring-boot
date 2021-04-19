@@ -10,13 +10,13 @@ import com.example.rest.store.UserStore;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor			//DI -1 
+@RequiredArgsConstructor			//DI -1   final 키워드 생성자 자동생성 
 public class UserServiceLogic implements UserService {
 
 //	@Autowired   //DI-2
 	private final UserStore userStore;
 	
-//	public UserServiceLogic(UserStore userStore) {     //DI-3
+//	public UserServiceLogic(UserStore userStore) {     //DI-3 생성
 //		this.userStore = userStore;
 //	}
 	
